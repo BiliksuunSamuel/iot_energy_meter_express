@@ -11,3 +11,8 @@ export const AuthSchema = new mongoose.Schema({
   userId: String,
   password: String,
 });
+
+export const EnergySchema = new mongoose.Schema({
+  energy: Number,
+  date: String,
+});

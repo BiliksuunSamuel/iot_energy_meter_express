@@ -14,3 +14,8 @@ export interface ILoginParams {
   phone: string;
   password: string;
 }
+
+export interface IEnergyInfo {
+  energy: number;
+  date: string;
+}
