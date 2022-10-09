@@ -50,6 +50,19 @@ socketClient.on("connection", (sock) => {
     }
   });
 
+  sock.on(SocketEvents.generator, (data) => {
+    console.log("Generator Status " + data);
+    if (parseInt(data) === 1) {
+      sock.emit(SocketEvents.generator, 1);
+      client.publish("generator", "1");
+      socket.emit(SocketEvents.generator, "1");
+    } else {
+      sock.emit(SocketEvents.generator, 0);
+      client.publish("generator", "0");
+      socket.emit(SocketEvents.generator, "0");
+    }
+  });
+
   sock.on(SocketEvents.maxPower, (data) => {
     console.log("max Power " + data);
     client.publish("max_con", parseFloat(data).toString());
