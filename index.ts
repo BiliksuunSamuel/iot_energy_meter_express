@@ -13,9 +13,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true, limit: "100mb" }));
 import socketIo, { Socket } from "socket.io";
 import { SocketEvents } from "./src/constants";
-import { IEnergyInfo } from "./src/interface";
+import { IEnergyInfo, IVoltageInfo } from "./src/interface";
 import moment from "moment";
-import { AddEnergyConsumption } from "./src/services/EnergyServices";
+import {
+  AddEnergyConsumption,
+  AddVoltage,
+} from "./src/services/EnergyServices";
 //
 app.use(router);
 
@@ -59,6 +62,12 @@ client.on("connect", function () {
   client.subscribe("meter", { qos: 0 }, (error) => {
     if (error) return console.log(error.message);
   });
+  client.subscribe("generator", { qos: 0 }, (error) => {
+    if (error) return console.log(error.message);
+  });
+  client.subscribe("voltage", { qos: 0 }, (error) => {
+    if (error) return console.log(error.message);
+  });
   client.subscribe("connection", { qos: 0 }, (error) => {
     if (error) {
       console.log(error.message);
@@ -88,6 +97,28 @@ client.on("message", async function (topic, message) {
     if (data.length <= 2) {
       socket && socket.emit(SocketEvents.maxPower, data);
     }
+  }
+  if (topic === "generator") {
+    const data = message.toString();
+    if (data.length <= 2) {
+      socket && socket.emit(SocketEvents.generator, data);
+    }
+  }
+  if (topic === "voltage") {
+    const data = message.toString();
+    if (data.length <= 2) {
+      socket && socket.emit(SocketEvents.voltage, data);
+    }
+  }
+  if (topic === "voltage") {
+    console.log(`Voltage = ${message}`);
+    const voltage = parseFloat(message.toString());
+    const info: IVoltageInfo = {
+      voltage: voltage,
+      date: moment().format(),
+    };
+    socket && socket.emit(SocketEvents.voltage, message.toString());
+    await AddVoltage(info);
   }
   if (topic === "rms_current") {
     console.log(`KWh = ${message}`);

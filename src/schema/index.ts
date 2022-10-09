@@ -16,3 +16,8 @@ export const EnergySchema = new mongoose.Schema({
   energy: Number,
   date: String,
 });
+
+export const VoltageSchema = new mongoose.Schema({
+  voltage: Number,
+  date: String,
+});

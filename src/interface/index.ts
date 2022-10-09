@@ -19,3 +19,13 @@ export interface IEnergyInfo {
   energy: number;
   date: string;
 }
+
+export interface IVoltageInfo {
+  voltage: number;
+  date: string;
+}
+export interface IVoltage {
+  _id: string;
+  date: string;
+  voltate: number;
+}
